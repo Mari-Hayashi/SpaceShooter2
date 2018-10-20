@@ -1,16 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class Mover : MonoBehaviour {
-	public float speed;
-	// Use this for initialization
-	void Start () {
-		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
-	}
+[System.Serializable]
+public class Mover : MonoBehaviour 
+{
 	
-	// Update is called once per frame
-	void Update () {
-		
+	[SerializeField]
+	private float speed;
+
+	void Start () 
+	{
+		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
 	}
 }

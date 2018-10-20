@@ -1,17 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Assertions;
 using UnityEngine;
 
-public class DestroyByTime : MonoBehaviour {
-	public float lifetime;
-	// Use this for initialization
-	void Start () {
+[System.Serializable]
+public class DestroyByTime : MonoBehaviour 
+{
+	[SerializeField]
+	private float lifetime;
+
+	void Awake(){
+		Assert.IsTrue (lifetime > 0);
+	}
+
+	void Start () 
+	{
 		GetComponent<AudioSource> ().Play ();
-		Destroy (this.gameObject, lifetime);
+		Destroy(gameObject, lifetime);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 }

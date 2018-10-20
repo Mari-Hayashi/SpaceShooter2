@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GetHit : MonoBehaviour {
-	private int life;
+// Attached to Bolt
+public class GetHit : MonoBehaviour 
+{
+	private int life = 2;
 
-	void OnTriggerEnter(Collider col){
-		if (col.gameObject.tag == "Enemy"){
-			life --;
+	void OnTriggerEnter(Collider col)
+	{
+		if (col.gameObject.tag.Equals(Tag.EnemyTag))
+		{
+			-- life;
 
-			if (life == 0){
-				Destroy(this.gameObject);
-			}
+			if (life == 0)Destroy(this.gameObject);
+
 		}
+
 	}
-	// Use this for initialization
-	void Start () {
-		life = 2;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
+
 }

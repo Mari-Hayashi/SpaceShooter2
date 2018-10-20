@@ -1,87 +1,125 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
+
 [System.Serializable]
-public class Boundary{
-	public float xMin, xMax, zMin, zMax;
+public class Boundary
+{
+	public float xMin;
+	public float xMax;
+	public float zMin;
+	public float zMax;
 }
-public class PlayerControl : MonoBehaviour {
-	public float speed;
-	public Boundary boundary;
-	public float tilt;
-	public GameObject shot;
-	public Transform shotspot;
-	public float fireRate;
+
+public class PlayerControl : MonoBehaviour 
+{
+	[SerializeField]
+	private float speed;
+	[SerializeField]
+	private Boundary boundary;
+	[SerializeField]
+	private float tilt;
+	[SerializeField]
+	private GameObject shot;
+	[SerializeField]
+	private Transform shotspot;
+	[SerializeField]
+	private float fireRate;
+
+	[SerializeField]
+	private GameObject player_ex;
+
+
+	[SerializeField]
+	private GameObject playerHealthBar;
+
+	public static int Health;
+	public static bool Damaged;
 	private float nextfire;
 
-	public GameObject player_ex;
+	private Rigidbody getRigidbody;
 
-	public static int health;
-	public GameObject PlayerHealthBar;
-	public Sprite sp_08;
-	public Sprite sp_06;
-	public Sprite sp_04;
-	public Sprite sp_02;
-	public Sprite sp_00;
-
-	public static bool damaged;
-
-	// Use this for initialization
-	void Start () {
-		damaged = false;
-		health = 5;
+	void Awake()
+	{
+		
+		Assert.IsTrue (speed > 0);
+		Assert.IsTrue (boundary.xMin < boundary.xMax);
+		Assert.IsTrue (boundary.zMin < boundary.zMax);
+		Assert.IsTrue (tilt > 0);
+		Assert.IsNotNull (shotspot);
+		Assert.IsNotNull (shot);
+		Assert.IsNotNull (player_ex);
+		Assert.IsNotNull (playerHealthBar);
+			
 	}
-	public void Damage(){
-		health--;
 
-		Sprite sp = sp_00;
-		switch (health){
-		case 4:
-			sp = sp_08;
-			break;
-		case 3:
-			sp = sp_06;
-			break;
-		case 2:
-			sp = sp_04;
-			break;
-		case 1:
-			sp = sp_02;
-			break;
-		case 0:
+
+	void Start () 
+	{
+		Damaged = false;
+		Health = 5;
+		nextfire = 0;
+		playerHealthBar.GetComponent<SetHealthBar>().SetHealthValue (10);
+		getRigidbody = GetComponent<Rigidbody> ();
+	}
+
+	private void Damage()
+	{
+		--Health;
+
+		if (Health == 0)
+		{
 			GameController.GameOver ();
-			Instantiate (player_ex, this.transform.position, this.transform.rotation);
-			Destroy (PlayerHealthBar);
-			Destroy (this.gameObject);
+			Instantiate (player_ex, transform.position, transform.rotation);
+			Destroy (playerHealthBar);
+			Destroy (gameObject);
 			return;
 		}
-		PlayerHealthBar.GetComponent<SpriteRenderer> ().sprite = sp;
+
+		playerHealthBar.GetComponent<SetHealthBar>().SetHealthValue (Health * 2);
 	}
-	void FixedUpdate(){
-		if (!GameController.gameover) {
+
+	void FixedUpdate()
+	{
+		if (!GameController.Gameover) 
+		{
 			float moveHorizontal = Input.GetAxis ("Horizontal");
 			float moveVertical = Input.GetAxis ("Vertical");
 
 
-			Vector3 movement = new Vector3 (moveHorizontal * speed, 0.0f, moveVertical * speed);
-			GetComponent<Rigidbody> ().velocity = movement;
-			GetComponent<Rigidbody> ().position = new Vector3 (Mathf.Clamp (GetComponent<Rigidbody> ().position.x, boundary.xMin, boundary.xMax), 
-				0f, 
-				Mathf.Clamp (GetComponent<Rigidbody> ().position.z, boundary.zMin, boundary.zMax));
-			GetComponent<Rigidbody> ().rotation = 
-			Quaternion.Euler (0f, 0f, GetComponent<Rigidbody> ().velocity.x * -tilt);
+			Vector3 movement = 
+				new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			movement *= speed;
+			getRigidbody.velocity = movement;
+			getRigidbody.position = 
+				new Vector3 
+				(
+					Mathf.Clamp (getRigidbody.position.x, boundary.xMin, boundary.xMax), 
+					0f, 
+					Mathf.Clamp (getRigidbody.position.z, boundary.zMin, boundary.zMax)
+				);
+			
+			getRigidbody.rotation = 
+				Quaternion.Euler (0f, 0f, getRigidbody.velocity.x * -tilt);
 		}
 	}
-	// Update is called once per frame
-	void Update () {
-		if (damaged) {
+
+
+	void Update () 
+	{
+		if (Damaged) 
+		{
+			Damaged = false;
 			Damage ();
-			damaged = false;
 		}
-		if (Time.time > nextfire && Input.GetKeyDown(KeyCode.Space)) {
+
+		if (Time.time > nextfire && Input.GetKeyDown(KeyCode.Space)) 
+		{
 			nextfire = Time.time + fireRate;
 			Instantiate (shot, shotspot.position, shotspot.rotation);
 			GetComponent<AudioSource> ().Play ();
 		}
+
 	}
 }

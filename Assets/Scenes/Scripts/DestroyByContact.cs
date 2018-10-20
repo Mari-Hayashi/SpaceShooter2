@@ -1,40 +1,58 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class DestroyByContact : MonoBehaviour {
-	public GameObject explosion;
+[System.Serializable]
+public class DestroyByContact : MonoBehaviour 
+{
 
-	public int astroid_health;
+	[SerializeField]
+	private GameObject explosion;
+	[SerializeField]
+	private GameObject healthbar;
+	[SerializeField]
+	private int astroid_health;
 
-	public GameObject healthbar;
-	public Sprite sp_00;
-	public Sprite sp_05;
+	void Awake()
+	{
+		Assert.IsNotNull (explosion);
+		Assert.IsNotNull (healthbar);
+		Assert.IsTrue (astroid_health > 0);
+	}
 
-	void hit(){
+	private void Hit()
+	{
 
 		astroid_health--;
 
-		if (astroid_health == 1) {
-			healthbar.GetComponent<SpriteRenderer> ().sprite = sp_05;
-
-		} else {
+		if (astroid_health == 0) 
+		{
 			Destroy (healthbar);
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 			GameController.addscore (10);
 			Instantiate (explosion, this.transform.position, this.transform.rotation);
+		} 
+		else 
+		{
+			healthbar.GetComponent<SetHealthBar> ().SetHealthValue (5);
+		}
+
+	}
+
+	void OnTriggerEnter(Collider col)
+	{
+
+		if (col.gameObject.tag.Equals(Tag.BoltTag))
+		{
+			Hit ();
+
+		}
+		else if (col.gameObject.tag.Equals(Tag.PlayerTag))
+		{
+			PlayerControl.Damaged = true;
+			Hit ();
 		}
 	}
 
-	void OnTriggerEnter(Collider col){
-
-		if (col.gameObject.tag == "Bolt") {
-			hit ();
-
-		}
-		else if (col.gameObject.tag == "Player"){
-			PlayerControl.damaged = true;
-			hit ();
-			}
-		}
 }

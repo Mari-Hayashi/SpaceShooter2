@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{31EA003C-1CF9-D946-A919-8AC5ED6BE76A}</ProjectGuid>
+    <ProjectGuid>{2CAA5144-A838-23F9-089C-F90709BB762B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -70,6 +70,8 @@
      <Compile Include="Assets\Scenes\Scripts\Mover.cs" />
      <Compile Include="Assets\Scenes\Scripts\PlayerControl.cs" />
      <Compile Include="Assets\Scenes\Scripts\RandomRotator.cs" />
+     <Compile Include="Assets\Scenes\Scripts\SetHealthBar.cs" />
+     <Compile Include="Assets\Scenes\Scripts\Tag.cs" />
      <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Users/Mari/Documents/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

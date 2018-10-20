@@ -1,21 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Assertions;
 using UnityEngine;
 
-public class Follow : MonoBehaviour {
-	public GameObject obj;
-	// Use this for initialization
-	void Start () {
-		
+
+[System.Serializable]
+public class Follow : MonoBehaviour 
+{
+	[SerializeField]
+	private Transform objToFollow;
+
+	void Awake()
+	{
+		Assert.IsNotNull (objToFollow);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (obj != null) {
-			Transform trans = obj.transform;
-			this.transform.position = trans.position - new Vector3 (0f, 0f, 1.5f);
-		} else {
-			Destroy (this);
+
+	void Update() 
+	{
+		if (objToFollow != null) 
+		{
+			transform.position = objToFollow.position - new Vector3 (0f, 0f, 1.5f);
+		} 
+		else 
+		{
+			Destroy(this);
 		}
 	}
+
 }
