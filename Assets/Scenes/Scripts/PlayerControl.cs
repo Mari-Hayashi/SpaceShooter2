@@ -16,8 +16,9 @@ public class PlayerControl : MonoBehaviour
 	private GameObject playerEx;
 	[SerializeField]
 	private HealthBar playerHealthBar;
+	[SerializeField]
+	private int Health;
 
-	public static int Health;
 	public static bool Damaged;
 	private float nextfire;
 	private const float speed = 5;
@@ -39,12 +40,11 @@ public class PlayerControl : MonoBehaviour
 		Assert.IsNotNull (audioSource);
 	}
 
-
 	private void Start () 
 	{
 		Damaged = false;
-		Health = 5;
 		nextfire = 0;
+		playerHealthBar.SetHealthValue (Health);
 	}
 
 	private void Damage()
@@ -73,8 +73,7 @@ public class PlayerControl : MonoBehaviour
 			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 			movement *= speed;
 			rigidBody.velocity = movement;
-			rigidBody.position = 
-				new Vector3 (
+			rigidBody.position = new Vector3 (
 					Mathf.Clamp (rigidBody.position.x, Boundary.xMin, Boundary.xMax), 
 					0f, 
 					Mathf.Clamp (rigidBody.position.z, Boundary.zMin, Boundary.zMax));

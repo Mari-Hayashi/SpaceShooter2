@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Strings : MonoBehaviour 
 {
-	public const string ScoreString = "Score: ";
+	public static string ScoreString = "";
 	public const string RestartString = "Press \"R\" for restart.";
 	public const string GameOverString = "Game Over";
 	public const string NullString = "";

@@ -21,6 +21,11 @@ public class DestroyByContact : MonoBehaviour
 		Assert.IsTrue (astroidHealth > 0);
 	}
 
+	private void Start()
+	{
+		healthbar.SetHealthValue(astroidHealth);
+	}
+
 	private void Hit()
 	{
 		astroidHealth--;

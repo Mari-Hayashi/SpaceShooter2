@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
 	private GameObject hazardBig;
 	[SerializeField]
 	public TextMesh scoreText;
-	[SerializeField]
-	private static int score;
+
+	public static int Score;
 
 	[SerializeField]
 	private TextMesh restartText;
@@ -29,7 +29,10 @@ public class GameController : MonoBehaviour
 	private const float hazardTime = 0.25f;
 	private const float waveTime = 3;
 
-	void Awake()
+	private const float hazardXRange = 6f; //  hazard range (x) is from -6 to 6.
+	private const float hazardInstantiatePosZ = 20f;
+
+	private void Awake()
 	{
 		Assert.IsNotNull (hazard);
 		Assert.IsNotNull (hazardBig);
@@ -38,19 +41,19 @@ public class GameController : MonoBehaviour
 		Assert.IsNotNull (gameOverText);
 	}
 
-	IEnumerator SpawnWaves()
+	private IEnumerator SpawnWaves()
 	{
 		while (!Gameover) 
 		{
 			for (int i = 0; i < numHazardPerWave; ++i) 
 			{
-				Vector3 Sppos = new Vector3 (Random.Range (-6f, 6f), 0f, 20f);
-				Instantiate (hazard, Sppos, Quaternion.identity);
+				Vector3 hazardPos = new Vector3 (Random.Range (-hazardXRange, hazardXRange), 0f, hazardInstantiatePosZ);
+				Instantiate (hazard, hazardPos, Quaternion.identity);
 				yield return new WaitForSeconds (hazardTime);
 			}
 
-			Vector3 Sppos2 = new Vector3 (Random.Range (-6f, 6f), 0f, 20f);
-			Instantiate (hazardBig, Sppos2, Quaternion.identity);
+			Vector3 bigHazardPos = new Vector3 (Random.Range (-hazardXRange, hazardXRange), 0f, hazardInstantiatePosZ);
+			Instantiate (hazardBig, bigHazardPos, Quaternion.identity);
 			yield return new WaitForSeconds (waveTime);
 
 			if (Gameover) 
@@ -73,21 +76,19 @@ public class GameController : MonoBehaviour
 		Gameover = false;
 		restart = false;
 		StartCoroutine (SpawnWaves ());
-		score = 0;
+		Score = 0;
 		gameOverText.text = Strings.NullString;
 		restartText.text = Strings.NullString;
 	}
 
 	public static void addScore()
 	{
-		score += ScorePerHit;
+		Score += ScorePerHit;
 	}
 
 	private void Update () 
 	{
-		scoreText.text = Strings.ScoreString + score;
-		//When I did "scoreText.text = $"Score: {score}",score;", it said:
-		//'interpolated strings' cannot be used because it is not part of the C# 4.0 language specification.
+		scoreText.text = $"Score: {Score}";
 		if (restart && Input.GetKeyDown (KeyCode.R))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
