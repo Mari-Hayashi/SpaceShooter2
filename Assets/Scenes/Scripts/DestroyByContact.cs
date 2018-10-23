@@ -10,43 +10,39 @@ public class DestroyByContact : MonoBehaviour
 	[SerializeField]
 	private GameObject explosion;
 	[SerializeField]
-	private GameObject healthbar;
+	private HealthBar healthbar;
 	[SerializeField]
-	private int astroid_health;
+	private int astroidHealth;
 
-	void Awake()
+	private void Awake()
 	{
 		Assert.IsNotNull (explosion);
 		Assert.IsNotNull (healthbar);
-		Assert.IsTrue (astroid_health > 0);
+		Assert.IsTrue (astroidHealth > 0);
 	}
 
 	private void Hit()
 	{
+		astroidHealth--;
 
-		astroid_health--;
-
-		if (astroid_health == 0) 
+		if (astroidHealth <= 0) 
 		{
-			Destroy (healthbar);
+			Destroy (healthbar.gameObject);
 			Destroy (gameObject);
-			GameController.addscore (10);
+			GameController.addScore ();
 			Instantiate (explosion, this.transform.position, this.transform.rotation);
 		} 
 		else 
 		{
-			healthbar.GetComponent<SetHealthBar> ().SetHealthValue (5);
+			healthbar.SetHealthValue (astroidHealth);
 		}
-
 	}
 
 	void OnTriggerEnter(Collider col)
 	{
-
 		if (col.gameObject.tag.Equals(Tag.BoltTag))
 		{
 			Hit ();
-
 		}
 		else if (col.gameObject.tag.Equals(Tag.PlayerTag))
 		{
@@ -54,5 +50,4 @@ public class DestroyByContact : MonoBehaviour
 			Hit ();
 		}
 	}
-
 }

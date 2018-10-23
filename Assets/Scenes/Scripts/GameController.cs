@@ -10,59 +10,53 @@ public class GameController : MonoBehaviour
 	[SerializeField]
 	private GameObject hazard;
 	[SerializeField]
-	private GameObject hazard_big;
+	private GameObject hazardBig;
 	[SerializeField]
-	private int hazardct;
-	[SerializeField]
-	private float hazardtime;
-	[SerializeField]
-	private float wavetime;
-	[SerializeField]
-	public TextMesh scoretext;
+	public TextMesh scoreText;
 	[SerializeField]
 	private static int score;
 
 	[SerializeField]
-	private TextMesh restarttext;
+	private TextMesh restartText;
 	[SerializeField]
-	private TextMesh gameovertext;
+	private TextMesh gameOverText;
 
 	public static bool Gameover;
 	private bool restart;
+	public const int ScorePerHit = 10;
+
+	private const int numHazardPerWave = 5;
+	private const float hazardTime = 0.25f;
+	private const float waveTime = 3;
 
 	void Awake()
 	{
 		Assert.IsNotNull (hazard);
-		Assert.IsNotNull (hazard_big);
-		Assert.IsNotNull (scoretext);
-		Assert.IsNotNull (restarttext);
-		Assert.IsNotNull (gameovertext);
-		Assert.IsTrue (hazardtime > 0);
-		Assert.IsTrue (wavetime > 0);
-
+		Assert.IsNotNull (hazardBig);
+		Assert.IsNotNull (scoreText);
+		Assert.IsNotNull (restartText);
+		Assert.IsNotNull (gameOverText);
 	}
 
 	IEnumerator SpawnWaves()
 	{
-		
 		while (!Gameover) 
 		{
-			
-			for (int i = 0; i < hazardct; ++i) 
+			for (int i = 0; i < numHazardPerWave; ++i) 
 			{
 				Vector3 Sppos = new Vector3 (Random.Range (-6f, 6f), 0f, 20f);
 				Instantiate (hazard, Sppos, Quaternion.identity);
-				yield return new WaitForSeconds (hazardtime);
+				yield return new WaitForSeconds (hazardTime);
 			}
 
 			Vector3 Sppos2 = new Vector3 (Random.Range (-6f, 6f), 0f, 20f);
-			Instantiate (hazard_big, Sppos2, Quaternion.identity);
-			yield return new WaitForSeconds (wavetime);
+			Instantiate (hazardBig, Sppos2, Quaternion.identity);
+			yield return new WaitForSeconds (waveTime);
 
 			if (Gameover) 
 			{
-				restarttext.text = "Press \"R\" for restart.";
-				gameovertext.text = "Game Over";
+				restartText.text = Strings.RestartString;
+				gameOverText.text = Strings.GameOverString;
 				restart = true;
 				break;
 			}
@@ -74,30 +68,30 @@ public class GameController : MonoBehaviour
 		Gameover = true;
 	}
 
-	void Start () 
+	private void Start () 
 	{
 		Gameover = false;
 		restart = false;
 		StartCoroutine (SpawnWaves ());
 		score = 0;
-		gameovertext.text = "";
-		restarttext.text = "";
+		gameOverText.text = Strings.NullString;
+		restartText.text = Strings.NullString;
 	}
 
-	public static void addscore(int n_score)
+	public static void addScore()
 	{
-		score += n_score;
+		score += ScorePerHit;
 	}
 
-	void Update () 
+	private void Update () 
 	{
-		scoretext.text = "Score: " + score;
+		scoreText.text = Strings.ScoreString + score;
+		//When I did "scoreText.text = $"Score: {score}",score;", it said:
+		//'interpolated strings' cannot be used because it is not part of the C# 4.0 language specification.
 		if (restart && Input.GetKeyDown (KeyCode.R))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
 		}
 	}
-			
 }
 

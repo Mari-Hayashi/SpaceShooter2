@@ -7,16 +7,19 @@ using UnityEngine;
 public class DestroyByTime : MonoBehaviour 
 {
 	[SerializeField]
-	private float lifetime;
+	private float timeBeforeDestroyed;
+	private AudioSource audioSource;
 
-	void Awake(){
-		Assert.IsTrue (lifetime > 0);
-	}
-
-	void Start () 
+	private void Awake()
 	{
-		GetComponent<AudioSource> ().Play ();
-		Destroy(gameObject, lifetime);
+		audioSource = GetComponent<AudioSource> ();
+		Assert.IsNotNull (audioSource);
+		Assert.IsTrue (timeBeforeDestroyed > 0);
 	}
 
+	private void Start ()
+	{
+		audioSource.Play ();
+		Destroy (gameObject, timeBeforeDestroyed);
+	}
 }

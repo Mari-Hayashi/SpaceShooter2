@@ -6,18 +6,16 @@ using UnityEngine.Assertions;
 [System.Serializable]
 public class RandomRotator : MonoBehaviour 
 {
-	[SerializeField]
-	private float tumble;
+	private const float tumble = 2f;
+	private Rigidbody rigidBody;
 
-	void Awake()
-	{
-		Assert.IsTrue(tumble == 2);
+	private void Awake(){
+		rigidBody = GetComponent<Rigidbody> ();
+		Assert.IsNotNull (rigidBody);
 	}
 
-	void Start () 
+	private void Start () 
 	{
-		GetComponent<Rigidbody> ().angularVelocity = Random.insideUnitSphere * tumble;
-		// Random.insideUnitsohere: gives us random Vector3.
+		rigidBody.angularVelocity = Random.insideUnitSphere * tumble;
 	}
-
 }

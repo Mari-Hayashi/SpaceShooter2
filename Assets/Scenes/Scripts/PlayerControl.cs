@@ -4,64 +4,47 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 [System.Serializable]
-public class Boundary
-{
-	public float xMin;
-	public float xMax;
-	public float zMin;
-	public float zMax;
-}
-
 public class PlayerControl : MonoBehaviour 
 {
 	[SerializeField]
-	private float speed;
-	[SerializeField]
-	private Boundary boundary;
-	[SerializeField]
-	private float tilt;
-	[SerializeField]
 	private GameObject shot;
 	[SerializeField]
-	private Transform shotspot;
+	private Transform shotSpot;
 	[SerializeField]
 	private float fireRate;
-
 	[SerializeField]
-	private GameObject player_ex;
-
-
+	private GameObject playerEx;
 	[SerializeField]
-	private GameObject playerHealthBar;
+	private HealthBar playerHealthBar;
 
 	public static int Health;
 	public static bool Damaged;
 	private float nextfire;
+	private const float speed = 5;
+	private const float tilt = 7;
+	private Rigidbody rigidBody;
+	private AudioSource audioSource;
 
-	private Rigidbody getRigidbody;
-
-	void Awake()
+	private void Awake()
 	{
-		
-		Assert.IsTrue (speed > 0);
-		Assert.IsTrue (boundary.xMin < boundary.xMax);
-		Assert.IsTrue (boundary.zMin < boundary.zMax);
-		Assert.IsTrue (tilt > 0);
-		Assert.IsNotNull (shotspot);
+		Assert.IsNotNull (shotSpot);
 		Assert.IsNotNull (shot);
-		Assert.IsNotNull (player_ex);
+		Assert.IsNotNull (playerEx);
 		Assert.IsNotNull (playerHealthBar);
-			
+
+		rigidBody = GetComponent<Rigidbody> ();
+		audioSource = GetComponent<AudioSource> ();
+
+		Assert.IsNotNull (rigidBody);
+		Assert.IsNotNull (audioSource);
 	}
 
 
-	void Start () 
+	private void Start () 
 	{
 		Damaged = false;
 		Health = 5;
 		nextfire = 0;
-		playerHealthBar.GetComponent<SetHealthBar>().SetHealthValue (10);
-		getRigidbody = GetComponent<Rigidbody> ();
 	}
 
 	private void Damage()
@@ -71,42 +54,35 @@ public class PlayerControl : MonoBehaviour
 		if (Health == 0)
 		{
 			GameController.GameOver ();
-			Instantiate (player_ex, transform.position, transform.rotation);
-			Destroy (playerHealthBar);
+			Instantiate (playerEx, transform.position, transform.rotation);
+			Destroy (playerHealthBar.gameObject);
 			Destroy (gameObject);
 			return;
 		}
 
-		playerHealthBar.GetComponent<SetHealthBar>().SetHealthValue (Health * 2);
+		playerHealthBar.SetHealthValue (Health);
 	}
 
-	void FixedUpdate()
+	private void FixedUpdate()
 	{
 		if (!GameController.Gameover) 
 		{
-			float moveHorizontal = Input.GetAxis ("Horizontal");
-			float moveVertical = Input.GetAxis ("Vertical");
+			float moveHorizontal = Input.GetAxis (Strings.HorizontalString);
+			float moveVertical = Input.GetAxis (Strings.VerticalString);
 
-
-			Vector3 movement = 
-				new Vector3 (moveHorizontal, 0.0f, moveVertical);
+			Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 			movement *= speed;
-			getRigidbody.velocity = movement;
-			getRigidbody.position = 
-				new Vector3 
-				(
-					Mathf.Clamp (getRigidbody.position.x, boundary.xMin, boundary.xMax), 
+			rigidBody.velocity = movement;
+			rigidBody.position = 
+				new Vector3 (
+					Mathf.Clamp (rigidBody.position.x, Boundary.xMin, Boundary.xMax), 
 					0f, 
-					Mathf.Clamp (getRigidbody.position.z, boundary.zMin, boundary.zMax)
-				);
-			
-			getRigidbody.rotation = 
-				Quaternion.Euler (0f, 0f, getRigidbody.velocity.x * -tilt);
+					Mathf.Clamp (rigidBody.position.z, Boundary.zMin, Boundary.zMax));
+			rigidBody.rotation = Quaternion.Euler (0f, 0f, rigidBody.velocity.x * -tilt);
 		}
 	}
-
-
-	void Update () 
+		
+	private void Update () 
 	{
 		if (Damaged) 
 		{
@@ -117,9 +93,8 @@ public class PlayerControl : MonoBehaviour
 		if (Time.time > nextfire && Input.GetKeyDown(KeyCode.Space)) 
 		{
 			nextfire = Time.time + fireRate;
-			Instantiate (shot, shotspot.position, shotspot.rotation);
-			GetComponent<AudioSource> ().Play ();
+			Instantiate (shot, shotSpot.position, shotSpot.rotation);
+			audioSource.Play ();
 		}
-
 	}
 }

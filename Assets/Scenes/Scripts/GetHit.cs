@@ -13,10 +13,10 @@ public class GetHit : MonoBehaviour
 		{
 			-- life;
 
-			if (life == 0)Destroy(this.gameObject);
-
+			if (life == 0) 
+			{
+				Destroy (gameObject);
+			}
 		}
-
 	}
-
 }

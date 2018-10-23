@@ -6,12 +6,18 @@ using UnityEngine.Assertions;
 [System.Serializable]
 public class Mover : MonoBehaviour 
 {
-	
 	[SerializeField]
 	private float speed;
+	private Rigidbody rigidBody;
 
-	void Start () 
+	private void Awake()
 	{
-		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
+		rigidBody = GetComponent<Rigidbody> ();
+		Assert.IsNotNull (rigidBody);
+	}
+
+	private void Start () 
+	{
+		rigidBody.velocity = transform.forward * speed;
 	}
 }
