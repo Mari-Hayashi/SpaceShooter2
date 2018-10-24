@@ -28,7 +28,7 @@ public class DestroyByContact : MonoBehaviour
 
 	private void Hit()
 	{
-		astroidHealth--;
+		--astroidHealth;
 
 		if (astroidHealth <= 0) 
 		{
@@ -51,7 +51,7 @@ public class DestroyByContact : MonoBehaviour
 		}
 		else if (col.gameObject.tag.Equals(Tag.PlayerTag))
 		{
-			PlayerControl.Damaged = true;
+			col.gameObject.GetComponent<PlayerControl> ().Damage ();
 			Hit ();
 		}
 	}

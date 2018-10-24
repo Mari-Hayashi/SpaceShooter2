@@ -19,7 +19,6 @@ public class PlayerControl : MonoBehaviour
 	[SerializeField]
 	private int Health;
 
-	public static bool Damaged;
 	private float nextfire;
 	private const float speed = 5;
 	private const float tilt = 7;
@@ -42,24 +41,13 @@ public class PlayerControl : MonoBehaviour
 
 	private void Start () 
 	{
-		Damaged = false;
 		nextfire = 0;
 		playerHealthBar.SetHealthValue (Health);
 	}
 
-	private void Damage()
-	{
+	public void Damage()
+	{   
 		--Health;
-
-		if (Health == 0)
-		{
-			GameController.GameOver ();
-			Instantiate (playerEx, transform.position, transform.rotation);
-			Destroy (playerHealthBar.gameObject);
-			Destroy (gameObject);
-			return;
-		}
-
 		playerHealthBar.SetHealthValue (Health);
 	}
 
@@ -83,12 +71,15 @@ public class PlayerControl : MonoBehaviour
 		
 	private void Update () 
 	{
-		if (Damaged) 
+		if (Health <= 0)
 		{
-			Damaged = false;
-			Damage ();
+			GameController.GameOver ();
+			Instantiate (playerEx, transform.position, transform.rotation);
+			Destroy (playerHealthBar.gameObject);
+			Destroy (gameObject);
+			return;
 		}
-
+			
 		if (Time.time > nextfire && Input.GetKeyDown(KeyCode.Space)) 
 		{
 			nextfire = Time.time + fireRate;

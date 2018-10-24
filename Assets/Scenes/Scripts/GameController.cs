@@ -47,12 +47,18 @@ public class GameController : MonoBehaviour
 		{
 			for (int i = 0; i < numHazardPerWave; ++i) 
 			{
-				Vector3 hazardPos = new Vector3 (Random.Range (-hazardXRange, hazardXRange), 0f, hazardInstantiatePosZ);
+				Vector3 hazardPos = new Vector3 (
+					Random.Range (-hazardXRange, hazardXRange), 
+					0f, 
+					hazardInstantiatePosZ);
 				Instantiate (hazard, hazardPos, Quaternion.identity);
 				yield return new WaitForSeconds (hazardTime);
 			}
 
-			Vector3 bigHazardPos = new Vector3 (Random.Range (-hazardXRange, hazardXRange), 0f, hazardInstantiatePosZ);
+			Vector3 bigHazardPos = new Vector3 (
+				Random.Range (-hazardXRange, hazardXRange), 
+				0f, 
+				hazardInstantiatePosZ);
 			Instantiate (hazardBig, bigHazardPos, Quaternion.identity);
 			yield return new WaitForSeconds (waveTime);
 
