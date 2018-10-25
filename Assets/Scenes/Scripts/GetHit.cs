@@ -9,7 +9,7 @@ public class GetHit : MonoBehaviour
 
 	void OnTriggerEnter(Collider col)
 	{
-		if (col.gameObject.tag.Equals(Tag.EnemyTag))
+		if (col.gameObject.tag.Equals(Tag.Tags.Enemy))
 		{
 			-- life;
 

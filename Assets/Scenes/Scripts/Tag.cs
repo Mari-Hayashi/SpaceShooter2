@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Tag : MonoBehaviour 
 {
-	public const string EnemyTag = "Enemy";
-	public const string BoundaryTag = "Boundary";
-	public const string BoltTag = "Bolt";
-	public const string AstroidTag = "Astroid";
-	public const string PlayerTag = "Player";
+	public static class Tags
+	{
+		public const string Enemy = "Enemy";
+		public const string Boundary = "Boundary";
+		public const string Bolt = "Bolt";
+		public const string Astroid = "Astroid";
+		public const string Player = "Player";
+	}
 }

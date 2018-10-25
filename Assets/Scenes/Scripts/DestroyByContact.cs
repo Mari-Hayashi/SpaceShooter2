@@ -45,11 +45,11 @@ public class DestroyByContact : MonoBehaviour
 
 	void OnTriggerEnter(Collider col)
 	{
-		if (col.gameObject.tag.Equals(Tag.BoltTag))
+		if (col.gameObject.tag.Equals(Tag.Tags.Bolt))
 		{
 			Hit ();
 		}
-		else if (col.gameObject.tag.Equals(Tag.PlayerTag))
+		else if (col.gameObject.tag.Equals(Tag.Tags.Player))
 		{
 			col.gameObject.GetComponent<PlayerControl> ().Damage ();
 			Hit ();
